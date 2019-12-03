@@ -1,5 +1,3 @@
-input = File.read('day-1-input').split("\n").map(&:to_i)
-
 def get_fuel_required mass
   (mass / 3).floor - 2
 end
@@ -20,5 +18,5 @@ end
 puts get_fuel_required_recursive 14
 puts get_fuel_required_recursive 1969
 
-result = input.map { |mass| get_fuel_required_recursive mass }.sum
-puts result
+input = File.read('day-1-input').split("\n").map(&:to_i)
+puts input.map { |mass| get_fuel_required_recursive mass }.sum
