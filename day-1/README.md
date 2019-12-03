@@ -35,4 +35,6 @@ What is the sum of the fuel requirements for all of the modules on your spacecra
 
 Your puzzle answer was 4940441.
 
+Both parts of this puzzle are complete! They provide two gold stars: **
+
 https://adventofcode.com/2019/day/1
