@@ -40,3 +40,6 @@ Your puzzle input is still 382345-843167.
 Your puzzle answer was 290.
 
 Both parts of this puzzle are complete! They provide two gold stars: **
+
+
+https://adventofcode.com/2019/day/4
