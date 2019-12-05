@@ -37,7 +37,7 @@ test [2,3,0,3,99], [2,3,0,6,99]
 test [2,4,4,5,99,0], [2,4,4,5,99,9801]
 test [1,1,1,4,99,5,6,0,99], [30,1,1,4,2,5,6,0,99]
 
-input = File.read('day-2-input').split(",").map(&:to_i)
+input = File.read('day2-input').split(",").map(&:to_i)
 input[1] = 12
 input[2] = 2
 result = int_code input
