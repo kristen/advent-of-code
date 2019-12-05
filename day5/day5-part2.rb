@@ -42,6 +42,28 @@ def bool_to_i bool
   bool ? 1 : 0
 end
 
+
+OPCODE_LENGTH = 2
+def get_parameters code, codes, num_of_parameters, offset
+  params = []
+
+  for i in 0..num_of_parameters-1
+    mode = code[OPCODE_LENGTH + i] || POSITION_MODE
+
+    value = case mode
+    when POSITION_MODE
+      codes[codes[offset+i+1]]
+    when IMMEDIATE_MODE
+      codes[offset+i+1]
+    end
+
+    puts "p_mode_#{i}: #{mode}; value_#{i}: #{value}"
+    params << value
+  end
+
+  params
+end
+
 def int_code codes
   i = 0
   while i < codes.length
@@ -52,26 +74,7 @@ def int_code codes
     puts "opcode_name: #{opcode_name(opcode)}"
     case opcode
     when ADD
-      p_mode_a = code[2] || POSITION_MODE
-      p_mode_b = code[3] || POSITION_MODE
-     
-      value_a = case p_mode_a
-      when POSITION_MODE
-        codes[codes[i+1]]
-      when IMMEDIATE_MODE
-        codes[i+1]
-      end
-
-      puts "p_mode_a: #{p_mode_a}; value_a: #{value_a}"
-      
-      value_b = case p_mode_b
-      when POSITION_MODE
-        codes[codes[i+2]]
-      when IMMEDIATE_MODE
-        codes[i+2]
-      end
-
-      puts "p_mode_b: #{p_mode_b}; value_b: #{value_b}"
+      value_a, value_b = get_parameters(code, codes, 2, i)
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
@@ -81,25 +84,7 @@ def int_code codes
 
       i += 4
     when MULTIPLY
-      p_mode_a = code[2] || POSITION_MODE
-      p_mode_b = code[3] || POSITION_MODE
-     
-      value_a = case p_mode_a
-      when POSITION_MODE
-        codes[codes[i+1]]
-      when IMMEDIATE_MODE
-        codes[i+1]
-      end
-
-      puts "p_mode_a: #{p_mode_a}; value_a: #{value_a}"
-
-      value_b = case p_mode_b
-      when POSITION_MODE
-        codes[codes[i+2]]
-      when IMMEDIATE_MODE
-        codes[i+2]
-      end
-      puts "p_mode_b: #{p_mode_b}; value_b: #{value_b}"
+      value_a, value_b = get_parameters(code, codes, 2, i)
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
@@ -122,25 +107,7 @@ def int_code codes
       puts "output: #{codes[index_output]}"
       i += 2
     when JUMP_IF_TRUE
-      p_mode_a = code[2] || POSITION_MODE
-      p_mode_b = code[3] || POSITION_MODE
-     
-      value_a = case p_mode_a
-      when POSITION_MODE
-        codes[codes[i+1]]
-      when IMMEDIATE_MODE
-        codes[i+1]
-      end
-
-      puts "p_mode_a: #{p_mode_a}; value_a: #{value_a}"
-
-      value_b = case p_mode_b
-      when POSITION_MODE
-        codes[codes[i+2]]
-      when IMMEDIATE_MODE
-        codes[i+2]
-      end
-      puts "p_mode_b: #{p_mode_b}; value_b: #{value_b}"
+      value_a, value_b = get_parameters(code, codes, 2, i)
 
       if value_a != 0
         i = value_b
@@ -148,25 +115,7 @@ def int_code codes
         i+=3
       end
     when JUMP_IF_FALSE
-      p_mode_a = code[2] || POSITION_MODE
-      p_mode_b = code[3] || POSITION_MODE
-     
-      value_a = case p_mode_a
-      when POSITION_MODE
-        codes[codes[i+1]]
-      when IMMEDIATE_MODE
-        codes[i+1]
-      end
-
-      puts "p_mode_a: #{p_mode_a}; value_a: #{value_a}"
-
-      value_b = case p_mode_b
-      when POSITION_MODE
-        codes[codes[i+2]]
-      when IMMEDIATE_MODE
-        codes[i+2]
-      end
-      puts "p_mode_b: #{p_mode_b}; value_b: #{value_b}"
+      value_a, value_b = get_parameters(code, codes, 2, i)
 
       if value_a == 0
         i = value_b
@@ -174,25 +123,7 @@ def int_code codes
         i+= 3
       end
     when LESS_THAN
-      p_mode_a = code[2] || POSITION_MODE
-      p_mode_b = code[3] || POSITION_MODE
-     
-      value_a = case p_mode_a
-      when POSITION_MODE
-        codes[codes[i+1]]
-      when IMMEDIATE_MODE
-        codes[i+1]
-      end
-
-      puts "p_mode_a: #{p_mode_a}; value_a: #{value_a}"
-
-      value_b = case p_mode_b
-      when POSITION_MODE
-        codes[codes[i+2]]
-      when IMMEDIATE_MODE
-        codes[i+2]
-      end
-      puts "p_mode_b: #{p_mode_b}; value_b: #{value_b}"
+      value_a, value_b = get_parameters(code, codes, 2, i)
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
@@ -201,25 +132,7 @@ def int_code codes
       codes[index_result] = bool_to_i(value_a < value_b)
       i+=4
     when EQUALS
-      p_mode_a = code[2] || POSITION_MODE
-      p_mode_b = code[3] || POSITION_MODE
-     
-      value_a = case p_mode_a
-      when POSITION_MODE
-        codes[codes[i+1]]
-      when IMMEDIATE_MODE
-        codes[i+1]
-      end
-
-      puts "p_mode_a: #{p_mode_a}; value_a: #{value_a}"
-
-      value_b = case p_mode_b
-      when POSITION_MODE
-        codes[codes[i+2]]
-      when IMMEDIATE_MODE
-        codes[i+2]
-      end
-      puts "p_mode_b: #{p_mode_b}; value_b: #{value_b}"
+      value_a, value_b = get_parameters(code, codes, 2, i)
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
