@@ -1,11 +1,10 @@
 class Orbit
-  attr_accessor :indirect_orbits, :orbit_object
+  attr_accessor :orbit_object
   attr_reader :name
   def initialize name, orbit_object
     @name = name
     # every object in space orbits around exactly one object! # except COM!!!!
     @orbit_object = orbit_object
-    @indirect_orbits = 0
   end
 
   def to_s
@@ -13,65 +12,23 @@ class Orbit
   end
 
   def inspect
-    "Orbit(name: #{name}, orbits: #{orbit_object&.name}, indirect_orbits: #{indirect_orbits})"
+    "Orbit(name: #{name}, orbits: #{orbit_object&.name || "nil"})"
   end
 end
 
-
-
 def get_orbits orbit_map
   orbits_hash = Hash.new
-  # com = Orbit.new("COM", nil)
-  # orbits_hash[com.name] = com
-
-  # iterate through orbits
-  # check if orbit is in hash
-  
-  # if orbit in hash
-  # 
-  
-  # if orbit NOT in hash
-  #    create new orbit
-  #    store in hash with orbit name as key
-  
-  # increment indirect orbits
 
   for i in 0..orbit_map.length - 1
     center_object_name, orbiter_name = orbit_map[i]
-    puts "#{orbiter_name} orbits #{center_object_name}"
-    
-    center_object = orbits_hash[center_object_name] # might be nil!!!
-    orbiter = orbits_hash[orbiter_name]
 
-    if center_object && orbiter
-      puts "center object #{center_object_name} already in hash"
-      puts "orbiter #{orbiter_name} already in hash"
-      # update orbiter with center object
-      orbiter.orbit_object = center_object
-    elsif center_object && !orbiter
-      puts "center object #{center_object_name} already in hash"
-      # save orbiter with center object
-      orbiter = Orbit.new(orbiter_name, center_object)
-      orbits_hash[orbiter_name] = orbiter
-    elsif !center_object && orbiter
-      puts "orbiter #{orbiter_name} already in hash"
-      # update orbiter with center object
-      center_object = Orbit.new(center_object_name, nil)
-      orbiter.orbit_object = center_object
-      orbits_hash[center_object_name] = center_object
-    else
-      puts "neither center #{center_object_name} or orbiter #{orbiter_name} in hash"
-      
-      center_object = Orbit.new(center_object_name, nil)
-      orbiter = Orbit.new(orbiter_name, center_object)
+    center_object = orbits_hash[center_object_name] || Orbit.new(center_object_name, nil)
+    orbiter = orbits_hash[orbiter_name] || Orbit.new(orbiter_name, center_object)
 
-      orbits_hash[center_object_name] = center_object
-      orbits_hash[orbiter_name] = orbiter
-    end
-
+    orbiter.orbit_object = center_object
+    orbits_hash[center_object_name] = center_object
+    orbits_hash[orbiter_name] = orbiter
   end
-
-  puts orbits_hash.inspect
 
   orbits = 0
 
@@ -102,4 +59,4 @@ end
 
 input = File.read('day6-input').split("\n").map { |o| o.split(")") }
 # puts input[0..5].inspect
-puts get_orbits input
+test input, 171213
