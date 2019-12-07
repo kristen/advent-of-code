@@ -39,13 +39,13 @@ end
 
 def get_num_of_transfers obj_a, obj_b
   hash = Hash.new
-  p = obj_a
-  while p.orbit_object
+  p = obj_a.orbit_object
+  while p&.orbit_object
     hash[p.name] = p
     p = p.orbit_object
   end
-  p = obj_b
-  while p.orbit_object
+  p = obj_b.orbit_object
+  while p&.orbit_object
     if hash.has_key? p.name
       # found shared parent
       p = p.orbit_object
@@ -57,15 +57,12 @@ def get_num_of_transfers obj_a, obj_b
     end
   end
 
-  while p.orbit_object
+  while p&.orbit_object
     # if remaining p because we broke out of hash
     # remove other objects from hash to cound transfers
     hash.delete p.name
     p = p.orbit_object
   end
-
-  hash.delete obj_a.name
-  hash.delete obj_b.name
 
   hash.size - 1
 end
