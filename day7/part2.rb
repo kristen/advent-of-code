@@ -173,16 +173,36 @@ def max_thruster_signal codes
   [max, max_phase_settings]
 end
 
+def print_amplifier i
+  amp = case i
+  when 0
+    "A"
+  when 1 
+    "B"
+  when 2 
+    "C"
+  when 3 
+    "D"
+  when 4 
+    "E"
+  end
+  puts "-------------- AMP #{amp} --------------"
+end
+
 def thruster_signal codes, phase_settings
   memo_index = [0,0,0,0,0]
   memo_codes = [codes.dup, codes.dup, codes.dup, codes.dup, codes.dup]
+  memo_inputs = phase_settings.map {|setting| [setting] }
   curr_output = 0
   i = 0
   while i < phase_settings.length
+    print_amplifier i if LOGGING
     puts "i: #{i}; memo_index: #{memo_index}" if LOGGING
-    phase_setting = phase_settings[i]
+    inputs = memo_inputs[i]
+    inputs << curr_output
 
-    output, index = int_code memo_codes[i], [phase_setting, curr_output], memo_index[i]
+    # potentially only give phase_setting on first time
+    output, index = int_code memo_codes[i], inputs, memo_index[i]
     if output
       curr_output = output
       # memo[i] = index % codes.length # remember where you left off at
