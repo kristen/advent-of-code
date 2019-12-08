@@ -162,7 +162,7 @@ def max_thruster_signal codes
 
   possible_phase_settings.each do |phase_settings|
     puts "testing phase setting: #{phase_settings}"
-    output = thruster_signal codes.dup, phase_settings
+    output = thruster_signal codes, phase_settings
     if output > max
       max = output
       max_phase_settings = phase_settings
@@ -174,23 +174,22 @@ def max_thruster_signal codes
 end
 
 def thruster_signal codes, phase_settings
-  # memo = [0,0,0,0,0]
-  memo = 0
+  memo_index = [0,0,0,0,0]
+  memo_codes = [codes.dup, codes.dup, codes.dup, codes.dup, codes.dup]
   curr_output = 0
   i = 0
   while i < phase_settings.length
-    puts "i: #{i}; memo: #{memo}" if LOGGING
+    puts "i: #{i}; memo_index: #{memo_index}" if LOGGING
     phase_setting = phase_settings[i]
 
-    # output, index = int_code codes, [phase_setting, curr_output], memo[i]
-    output, index = int_code codes, [phase_setting, curr_output], memo
+    output, index = int_code memo_codes[i], [phase_setting, curr_output], memo_index[i]
     if output
       curr_output = output
       # memo[i] = index % codes.length # remember where you left off at
-      memo = index # remember where you left off at
+      memo_index[i] = index # remember where you left off at
       i = (i + 1) % 5 # paused so make sure to increment and loop back
     else
-      i+= 1 # done so increment
+      i += 1 # done so increment
     end
 
   end
