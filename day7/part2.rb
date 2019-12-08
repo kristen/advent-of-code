@@ -1,4 +1,4 @@
-LOGGING = false
+LOGGING = true
 
 ADD = 1
 MULTIPLY = 2
@@ -66,10 +66,8 @@ def get_parameters code, codes, num_of_parameters, offset
   params
 end
 
-def int_code codes, inputs
+def int_code codes, inputs, i = 0
   puts "inputs: #{inputs.join(",")}" if LOGGING
-  outputs = []
-  i = 0
   while i < codes.length
     puts "codes: #{codes}" if LOGGING
     puts "i: #{i}" if LOGGING
@@ -79,22 +77,22 @@ def int_code codes, inputs
     case opcode
     when ADD
       value_a, value_b = get_parameters(code, codes, 2, i)
+      result = value_a + value_b
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
-      puts "index_result: #{index_result}" if LOGGING
-
-      codes[index_result] = value_a + value_b
+      puts "saving #{result} to index #{index_result}" if LOGGING
+      codes[index_result] = result
 
       i += 4
     when MULTIPLY
       value_a, value_b = get_parameters(code, codes, 2, i)
+      result = value_a * value_b
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
-      puts "index_result: #{index_result}" if LOGGING
-
-      codes[index_result] = value_a * value_b
+      puts "saving #{result} to index #{index_result}" if LOGGING
+      codes[index_result] = result
 
       i += 4
     when INPUT
@@ -108,9 +106,8 @@ def int_code codes, inputs
       index_output = codes[i+1]
       output = codes[index_output]
       puts "output: #{output}" if LOGGING
-      outputs << output
-      return outputs
       i += 2
+      return [output, i]
     when JUMP_IF_TRUE
       value_a, value_b = get_parameters(code, codes, 2, i)
 
@@ -129,34 +126,34 @@ def int_code codes, inputs
       end
     when LESS_THAN
       value_a, value_b = get_parameters(code, codes, 2, i)
+      result = bool_to_i(value_a < value_b)
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
-      puts "index_result: #{index_result}" if LOGGING
+      puts "saving #{result} to index #{index_result}" if LOGGING
+      codes[index_result] = result
 
-      codes[index_result] = bool_to_i(value_a < value_b)
       i+=4
     when EQUALS
       value_a, value_b = get_parameters(code, codes, 2, i)
+      result = bool_to_i(value_a == value_b)
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
-      puts "index_result: #{index_result}" if LOGGING
-
-      codes[index_result] = bool_to_i(value_a == value_b)
+      puts "saving #{result} to index #{index_result}" if LOGGING
+      codes[index_result] = result
+      
       i+=4
     when FINISHED
       break;
     end
-
   end
-  outputs
 end
 
 def possible_phase_settings
   # phase settings 0, 1, 2, 3, 4
   # each one used exactly once
-  (0..4).to_a.permutation.to_a
+  (5..9).to_a.permutation.to_a
 end
 
 def max_thruster_signal codes
@@ -177,14 +174,25 @@ def max_thruster_signal codes
 end
 
 def thruster_signal codes, phase_settings
+  # memo = [0,0,0,0,0]
+  memo = 0
   curr_output = 0
-  phase_settings.each do |phase_setting|
-    result = int_code codes, [phase_setting, curr_output]
-    if result.size != 1
-      puts "result has less than 1 input: #{result}"
-      return
+  i = 0
+  while i < phase_settings.length
+    puts "i: #{i}; memo: #{memo}" if LOGGING
+    phase_setting = phase_settings[i]
+
+    # output, index = int_code codes, [phase_setting, curr_output], memo[i]
+    output, index = int_code codes, [phase_setting, curr_output], memo
+    if output
+      curr_output = output
+      # memo[i] = index % codes.length # remember where you left off at
+      memo = index # remember where you left off at
+      i = (i + 1) % 5 # paused so make sure to increment and loop back
+    else
+      i+= 1 # done so increment
     end
-    curr_output = result.last
+
   end
   curr_output
 end
@@ -194,18 +202,19 @@ def test_thruster_signal codes, phase_settings, expected
   puts "match: #{result == expected}; expected: #{expected}; thruster_signal(codes, #{phase_settings}) = #{result}"
 end
 
-# test_thruster_signal [3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0], [4,3,2,1,0], 43210
+test_thruster_signal [3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5], [9,8,7,6,5], 139629729
+# test_thruster_signal [3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,-5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10], [9,7,8,5,6], 18216
 
 def test codes, expected
   result, phase_settings = max_thruster_signal codes
   puts "match: #{result == expected[0]}; expected: #{expected[0]}; expected phase_setting: #{expected[1]}; max_thruster_signal(#{codes}) = #{result}, phase_settings: #{phase_settings}"
 end
 
-test [3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0], [43210, [4,3,2,1,0]]
-test [3,23,3,24,1002,24,10,24,1002,23,-1,23,101,5,23,23,1,24,23,23,4,23,99,0,0], [54321, [0,1,2,3,4]]
-test [3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0], [65210,[0,4,3,2]]
+# test [3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0], [43210, [4,3,2,1,0]]
+# test [3,23,3,24,1002,24,10,24,1002,23,-1,23,101,5,23,23,1,24,23,23,4,23,99,0,0], [54321, [0,1,2,3,4]]
+# test [3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0], [65210,[0,4,3,2]]
 
 
 
-input = File.read('input').split(",").map(&:to_i)
-test input, [34686, [4, 2, 1, 0, 3]]
+# input = File.read('input').split(",").map(&:to_i)
+# puts max_thruster_signal input
