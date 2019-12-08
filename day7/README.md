@@ -85,3 +85,7 @@ Here are some example programs:
 53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10
 
 Try every combination of the new phase settings on the amplifier feedback loop. What is the highest signal that can be sent to the thrusters?
+
+Your puzzle answer was 36384144.
+
+Both parts of this puzzle are complete! They provide two gold stars: **
