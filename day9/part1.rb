@@ -94,7 +94,7 @@ def get_parameters code, codes, num_of_parameters, offset, basis
     end
     value = codes[index]
 
-    puts "p_mode: #{get_pmode(mode)}; value_#{i}: #{value}" if LOGGING
+    puts "p_mode: #{get_pmode(mode)}; index_#{i}: #{index} value_#{i}: #{value}" if LOGGING
     params << value
   end
 
@@ -123,26 +123,28 @@ def int_code codes, inputs
     case opcode
     when ADD
       value_a, value_b = get_parameters(code, codes, 2, i, basis)
+      result = value_a + value_b
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
-      puts "index_result: #{index_result}" if LOGGING
+      puts "saving #{result} to index: #{index_result}" if LOGGING
 
-      codes[index_result] = value_a + value_b
+      codes[index_result] = result
 
       i += 4
     when MULTIPLY
       value_a, value_b = get_parameters(code, codes, 2, i, basis)
+      result = value_a * value_b
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
       puts "index_result: #{index_result}" if LOGGING
 
-      codes[index_result] = value_a * value_b
+      codes[index_result] = result
 
       i += 4
     when INPUT
-      index_save = codes[i+1]
+      index_save = get_parameters(code, codes, 1, i, basis).first
       input = inputs.shift
       puts "Saving #{input} to index #{index_save}" if LOGGING
       codes[index_save] = input
@@ -159,6 +161,7 @@ def int_code codes, inputs
       value_a, value_b = get_parameters(code, codes, 2, i, basis)
 
       if value_a != 0
+        puts "updating i from #{i} to #{value_b}" if LOGGING
         i = value_b
       else
         i+=3
@@ -167,27 +170,30 @@ def int_code codes, inputs
       value_a, value_b = get_parameters(code, codes, 2, i, basis)
 
       if value_a == 0
+        puts "updating i from #{i} to #{value_b}" if LOGGING
         i = value_b
       else
         i+= 3
       end
     when LESS_THAN
       value_a, value_b = get_parameters(code, codes, 2, i, basis)
+      result = bool_to_i(value_a < value_b)
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
-      puts "index_result: #{index_result}" if LOGGING
+      puts "saving #{result} to index: #{index_result}" if LOGGING
 
-      codes[index_result] = bool_to_i(value_a < value_b)
+      codes[index_result] = result
       i+=4
     when EQUALS
       value_a, value_b = get_parameters(code, codes, 2, i, basis)
+      result = bool_to_i(value_a == value_b)
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
-      puts "index_result: #{index_result}" if LOGGING
+      puts "saving #{result} to index: #{index_result}" if LOGGING
 
-      codes[index_result] = bool_to_i(value_a == value_b)
+      codes[index_result] = result
       i+=4
     when RELATIVE_BASIS
       # add_basis = codes[i+1]
