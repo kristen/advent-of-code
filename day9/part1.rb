@@ -48,6 +48,17 @@ def bool_to_i bool
   bool ? 1 : 0
 end
 
+def get_pmode mode
+  case mode
+  when POSITION_MODE
+    "POSITION_MODE"
+  when IMMEDIATE_MODE
+    "IMMEDIATE_MODE"
+  when RELATIVE_MODE
+    "RELATIVE_MODE"
+  end
+end
+
 OPCODE_LENGTH = 2
 def get_parameters code, codes, num_of_parameters, offset, basis
   params = []
@@ -55,20 +66,47 @@ def get_parameters code, codes, num_of_parameters, offset, basis
   for i in 0..num_of_parameters-1
     mode = code[OPCODE_LENGTH + i] || POSITION_MODE
 
-    value = case mode
-    when POSITION_MODE
-      codes[codes[offset+i+1]]
-    when IMMEDIATE_MODE
-      codes[offset+i+1]
-    when RELATIVE_BASIS
-      codes[codes[basis+offset+i+1]]
+    index = case mode
+      when POSITION_MODE
+        parameter = codes[offset+i+1]
+        index = parameter || 0
+        puts "parameter: #{parameter}; index: #{index}" if LOGGING
+        index
+      when IMMEDIATE_MODE
+        offset+i+1
+        # codes[offset+i+1]
+      when RELATIVE_MODE
+        parameter = codes[offset+i+1]
+        index = basis + parameter
+        puts "parameter: #{parameter} + basis: #{basis} = #{index}" if LOGGING
+        index
+        # codes[codes[basis+offset+i+1]]
+        # codes[codes[basis+i+1]]
+        # codes[codes[basis+offset]]
+        # codes[codes[basis+offset+i]]
+        # codes[codes[basis]]
+        # codes[codes[basis+1]]
+        # codes[basis+codes[offset+i+1]]
     end
 
-    puts "p_mode_#{i}: #{mode}; value_#{i}: #{value}" if LOGGING
+    if !codes[index]
+      codes[index] = 0
+    end
+    value = codes[index]
+
+    puts "p_mode: #{get_pmode(mode)}; value_#{i}: #{value}" if LOGGING
     params << value
   end
 
   params
+end
+
+def fill_zeros codes, start
+  for i in start..codes.length-1
+    if !codes[i]
+      codes[i] = 0
+    end
+  end
 end
 
 def int_code codes, inputs
@@ -111,11 +149,11 @@ def int_code codes, inputs
       i += 2
     when OUTPUT
       # Parameters that an instruction writes to will never be in immediate mode
-      index_output = codes[i+1]
-      output = codes[index_output]
+      output = get_parameters(code, codes, 1, i, basis).first
+
       puts "output: #{output}" if LOGGING
       outputs << output
-      return outputs
+      # return outputs
       i += 2
     when JUMP_IF_TRUE
       value_a, value_b = get_parameters(code, codes, 2, i, basis)
@@ -152,13 +190,15 @@ def int_code codes, inputs
       codes[index_result] = bool_to_i(value_a == value_b)
       i+=4
     when RELATIVE_BASIS
-      add_basis = codes[i+1]
+      # add_basis = codes[i+1]
+      add_basis = get_parameters(code, codes, 1, i, basis).first
       puts "increasing basis #{basis} by #{add_basis}" if LOGGING
       basis += add_basis
       i+=2
     when FINISHED
       break;
     end
+    fill_zeros codes, i
 
   end
   outputs
@@ -167,12 +207,16 @@ end
 def test codes, inputs, expected
   result = int_code codes.dup, inputs
   puts "match: #{result == expected}; expected: #{expected}; int_codes(#{codes}) = #{result}"
+  puts
+  puts "---------------------"
+  puts
 end
 
 # test [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99], [], [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
-# test [1102,34915192,34915192,7,4,7,99,0], [], 1219070632396864
-test [104,1125899906842624,99], [], 1125899906842624
+# test [1102,34915192,34915192,7,4,7,99,0], [], [1219070632396864]
+# test [104,1125899906842624,99], [], [1125899906842624]
 
 
-# input = File.read('day5-input').split(",").map(&:to_i)
-# int_code input
+input = File.read('input').split(",").map(&:to_i)
+result = int_code input, [1]
+puts result.inspect
