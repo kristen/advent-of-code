@@ -2,6 +2,7 @@ LOGGING = true
 
 class Asteroid
   attr_accessor :x, :y
+  attr_reader :visible_asteroids
   def initialize x, y
     @x = x
     @y = y
@@ -23,6 +24,7 @@ class Asteroid
         @visible_asteroids[s] = stats
       end
     else
+      puts "saving asteroid to visible asteroids #{stats}"
       @visible_asteroids[s] = stats
     end
   end
@@ -34,7 +36,15 @@ class Asteroid
   def slope other
     delta_x = x - other.x
     return nil if delta_x == 0
-    (y - other.y) / delta_x
+    delta_y = y - other.y
+    m = delta_y / (delta_x * 1.0)
+    puts "delta x: #{delta_x}; detla y: #{delta_y}" if LOGGING
+    dir = if delta_y == 0 && delta_x > 0 || delta_x > 0 && delta_y > 0 || delta_x < 0 && delta_y < 0
+      "pos"
+    else
+      "neg"
+    end
+    [m.abs, dir]
   end
 
   def distance other
@@ -63,7 +73,8 @@ class Stats
   end
 
   def to_s
-    "#{asteroid}; slope: #{slope&.round(2)}; distance: #{distance.round(2)}"
+    m, dir = slope
+    "#{asteroid}; slope: #{m&.round(2)}; dir: #{dir}; dis: #{distance.round(2)}"
   end
 
   def inspect
@@ -84,14 +95,23 @@ def get_best_location map
       end
     end
   end
+  # for i in 0..asteroids.length-1
+  #   for j in 0..asteroids.length-1
+  #     a1 = asteroids[i]
+  #     a2 = asteroids[j]
+  #     puts "asteroids: #{a1} & #{a2}" if LOGGING
+  #     a1.add_asteroid(a2) if a1 != a2
+  #   end
+  # end
+
+  a1 = asteroids[4]
   for i in 0..asteroids.length-1
-    for j in 0..asteroids.length-1
-      a1 = asteroids[i]
-      a2 = asteroids[j]
-      puts "asteroids: #{a1} & #{a2}" if LOGGING
-      a1.add_asteroid(a2) if a1 != a2
-    end
+    a2 = asteroids[i]
+    puts "asteroids: #{a1} & #{a2}" if LOGGING
+    a1.add_asteroid(a2) if a1 != a2
   end
+  puts "visible asteroids #{a1.visible_asteroids}" if LOGGING
+
   asteroids.each do |asteroid|
     puts "asteroid: #{asteroid}; number of visible asteroids: #{asteroid.number_of_visible_asteroids}" if LOGGING
   end
