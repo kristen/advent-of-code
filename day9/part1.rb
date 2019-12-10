@@ -61,7 +61,22 @@ end
 
 OPCODE_LENGTH = 2
 def get_parameters code, codes, num_of_parameters, offset, basis
-  params = []
+  indexes = get_index_of_parameters code, codes, num_of_parameters, offset, basis
+
+  indexes.map do |index|
+    if !codes[index]
+      codes[index] = 0
+    end
+    value = codes[index]
+
+    puts "value: #{value}" if LOGGING
+    value
+  end
+
+end
+
+def get_index_of_parameters code, codes, num_of_parameters, offset, basis
+  indexes = []
 
   for i in 0..num_of_parameters-1
     mode = code[OPCODE_LENGTH + i] || POSITION_MODE
@@ -73,32 +88,20 @@ def get_parameters code, codes, num_of_parameters, offset, basis
         puts "parameter: #{parameter}; index: #{index}" if LOGGING
         index
       when IMMEDIATE_MODE
-        offset+i+1
-        # codes[offset+i+1]
+        index = offset+i+1
+        puts "index: #{index}" if LOGGING
+        index
       when RELATIVE_MODE
         parameter = codes[offset+i+1]
         index = basis + parameter
         puts "parameter: #{parameter} + basis: #{basis} = #{index}" if LOGGING
         index
-        # codes[codes[basis+offset+i+1]]
-        # codes[codes[basis+i+1]]
-        # codes[codes[basis+offset]]
-        # codes[codes[basis+offset+i]]
-        # codes[codes[basis]]
-        # codes[codes[basis+1]]
-        # codes[basis+codes[offset+i+1]]
     end
 
-    if !codes[index]
-      codes[index] = 0
-    end
-    value = codes[index]
-
-    puts "p_mode: #{get_pmode(mode)}; index_#{i}: #{index} value_#{i}: #{value}" if LOGGING
-    params << value
+    puts "p_mode: #{get_pmode(mode)}; index_#{i}: #{index}" if LOGGING
+    indexes << index
   end
-
-  params
+  indexes
 end
 
 def fill_zeros codes, start
@@ -115,11 +118,9 @@ def int_code codes, inputs
   basis = 0
   i = 0
   while i < codes.length
-    puts "codes: #{codes}" if LOGGING
-    puts "i: #{i}" if LOGGING
     code = codes[i].digits
     opcode = get_opcode code
-    puts "code: #{codes[i]} -> #{code} opcode_name: #{opcode_name(opcode)}" if LOGGING
+    puts "i: #{i}; code: #{codes[i]} -> #{code}; opcode_name: #{opcode_name(opcode)}; codes: #{codes}" if LOGGING
     case opcode
     when ADD
       value_a, value_b = get_parameters(code, codes, 2, i, basis)
@@ -138,13 +139,13 @@ def int_code codes, inputs
 
       # Parameters that an instruction writes to will never be in immediate mode
       index_result = codes[i+3]
-      puts "index_result: #{index_result}" if LOGGING
+      puts "saving #{result} to index: #{index_result}" if LOGGING
 
       codes[index_result] = result
 
       i += 4
     when INPUT
-      index_save = get_parameters(code, codes, 1, i, basis).first
+      index_save = get_index_of_parameters(code, codes, 1, i, basis).first
       input = inputs.shift
       puts "Saving #{input} to index #{index_save}" if LOGGING
       codes[index_save] = input
@@ -164,6 +165,7 @@ def int_code codes, inputs
         puts "updating i from #{i} to #{value_b}" if LOGGING
         i = value_b
       else
+        puts "not jumping" if LOGGING
         i+=3
       end
     when JUMP_IF_FALSE
@@ -173,6 +175,7 @@ def int_code codes, inputs
         puts "updating i from #{i} to #{value_b}" if LOGGING
         i = value_b
       else
+        puts "not jumping" if LOGGING
         i+= 3
       end
     when LESS_THAN
@@ -224,5 +227,6 @@ end
 
 
 input = File.read('input').split(",").map(&:to_i)
+# size of input is 973
 result = int_code input, [1]
 puts result.inspect
