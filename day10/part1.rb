@@ -1,4 +1,4 @@
-LOGGING = true
+LOGGING = false
 
 class Asteroid
   attr_accessor :x, :y
@@ -24,7 +24,7 @@ class Asteroid
         @visible_asteroids[s] = stats
       end
     else
-      puts "saving asteroid to visible asteroids #{stats}"
+      puts "saving asteroid to visible asteroids #{stats}" if LOGGING
       @visible_asteroids[s] = stats
     end
   end
@@ -114,17 +114,6 @@ def get_best_location map
     end
   end
 
-  # a1 = asteroids[6]
-  # for i in 0..asteroids.length-1
-  #   a2 = asteroids[i]
-  #   puts "asteroids: #{a1} & #{a2}" if LOGGING
-  #   a1.add_asteroid(a2) if a1 != a2
-  # end
-  # puts "visible asteroids #{a1.visible_asteroids}" if LOGGING
-
-  asteroids.each do |asteroid|
-    puts "asteroid: #{asteroid}; number of visible asteroids: #{asteroid.number_of_visible_asteroids}" if LOGGING
-  end
   asteroids.map { |a| a.number_of_visible_asteroids }.max
 end
 
@@ -134,13 +123,71 @@ end
 
 def test input, expected
   map = parse_input input
-  puts map.inspect
+  puts map.inspect if LOGGING
   result = get_best_location map
   puts "match: #{result == expected}; expected: #{expected}; get_best_location(map) = #{result}"
 end
 
-test ".#..#
-.....
-#####
-....#
-...##", 8
+input = File.read('input')
+puts get_best_location(parse_input(input))
+
+# test ".#..#
+# .....
+# #####
+# ....#
+# ...##", 8
+
+# test "......#.#.
+# #..#.#....
+# ..#######.
+# .#.#.###..
+# .#..#.....
+# ..#....#.#
+# #..#....#.
+# .##.#..###
+# ##...#..#.
+# .#....####", 33
+
+# test "#.#...#.#.
+# .###....#.
+# .#....#...
+# ##.#.#.#.#
+# ....#.#.#.
+# .##..###.#
+# ..#...##..
+# ..##....##
+# ......#...
+# .####.###.", 35
+
+# test ".#..#..###
+# ####.###.#
+# ....###.#.
+# ..###.##.#
+# ##.##.#.#.
+# ....###..#
+# ..#.#..#.#
+# #..#.#.###
+# .##...##.#
+# .....#.#..", 41
+
+# test ".#..##.###...#######
+# ##.############..##.
+# .#.######.########.#
+# .###.#######.####.#.
+# #####.##.#.##.###.##
+# ..#####..#.#########
+# ####################
+# #.####....###.#.#.##
+# ##.#################
+# #####.##.###..####..
+# ..######..##.#######
+# ####.##.####...##..#
+# .#####..#.######.###
+# ##...#.##########...
+# #.##########.#######
+# .####.#.###.###.#.##
+# ....##.##.###..#####
+# .#.#.###########.###
+# #.#.#.#####.####.###
+# ###.##.####.##.#..##", 210
+
