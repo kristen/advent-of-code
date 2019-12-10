@@ -1,4 +1,4 @@
-LOGGING = true
+LOGGING = false
 
 ADD = 1
 MULTIPLY = 2
@@ -230,5 +230,5 @@ end
 
 input = File.read('input').split(",").map(&:to_i)
 # size of input is 973
-result = int_code input, [1]
+result = int_code input, [2]
 puts result.inspect
