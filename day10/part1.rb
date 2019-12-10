@@ -35,16 +35,26 @@ class Asteroid
 
   def slope other
     delta_x = x - other.x
-    return nil if delta_x == 0
     delta_y = y - other.y
+    dir_x = if delta_x > 0
+      "pos"
+    elsif delta_x < 0
+      "neg"
+    else
+      nil
+    end
+  dir_y = if delta_y > 0
+      "pos"
+    elsif delta_y < 0
+      "neg"
+    else
+      nil
+    end
+    return [nil, [dir_x, dir_y]] if delta_x == 0
     m = delta_y / (delta_x * 1.0)
     puts "delta x: #{delta_x}; detla y: #{delta_y}" if LOGGING
-    dir = if delta_y == 0 && delta_x > 0 || delta_x > 0 && delta_y > 0 || delta_x < 0 && delta_y < 0
-      "pos"
-    else
-      "neg"
-    end
-    [m.abs, dir]
+    
+    [m.abs, [dir_x, dir_y]]
   end
 
   def distance other
@@ -95,22 +105,22 @@ def get_best_location map
       end
     end
   end
-  # for i in 0..asteroids.length-1
-  #   for j in 0..asteroids.length-1
-  #     a1 = asteroids[i]
-  #     a2 = asteroids[j]
-  #     puts "asteroids: #{a1} & #{a2}" if LOGGING
-  #     a1.add_asteroid(a2) if a1 != a2
-  #   end
-  # end
-
-  a1 = asteroids[4]
   for i in 0..asteroids.length-1
-    a2 = asteroids[i]
-    puts "asteroids: #{a1} & #{a2}" if LOGGING
-    a1.add_asteroid(a2) if a1 != a2
+    for j in 0..asteroids.length-1
+      a1 = asteroids[i]
+      a2 = asteroids[j]
+      puts "asteroids: #{a1} & #{a2}" if LOGGING
+      a1.add_asteroid(a2) if a1 != a2
+    end
   end
-  puts "visible asteroids #{a1.visible_asteroids}" if LOGGING
+
+  # a1 = asteroids[6]
+  # for i in 0..asteroids.length-1
+  #   a2 = asteroids[i]
+  #   puts "asteroids: #{a1} & #{a2}" if LOGGING
+  #   a1.add_asteroid(a2) if a1 != a2
+  # end
+  # puts "visible asteroids #{a1.visible_asteroids}" if LOGGING
 
   asteroids.each do |asteroid|
     puts "asteroid: #{asteroid}; number of visible asteroids: #{asteroid.number_of_visible_asteroids}" if LOGGING
