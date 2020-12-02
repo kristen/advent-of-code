@@ -1,0 +1,28 @@
+#!/usr/bin/ruby
+
+require 'fileutils'
+
+day = ARGV[0]
+files = ['answer1.rb', 'answer2.rb', 'input', 'helper.rb', 'question.md']
+
+dirname = "#{Dir.pwd}/day#{day}"
+puts dirname
+if File.directory?(dirname)
+  puts "there is already a folder for day#{day}"
+else
+  puts "making files for day#{day}"
+  FileUtils.mkdir_p(dirname)
+
+  files.each do |file_name|
+    file = "#{Dir.pwd}/day#{day}/#{file_name}"
+    if File.exist?(file)
+      puts "#{file_name} file exists"
+    else
+      puts "making #{file_name} file"
+      file = File.open file, "w"
+      if (file_name.start_with?('answer'))
+        file.write("require_relative \"helper\"\n\ninput = File.read(\"\#{__dir__}/input\")")
+      end
+    end
+  end
+end
