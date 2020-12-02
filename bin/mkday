@@ -3,7 +3,7 @@
 require 'fileutils'
 
 day = ARGV[0]
-files = ['answer1.rb', 'answer2.rb', 'input', 'helper.rb', 'question.md']
+files = ['answer1.rb', 'answer2.rb', 'input', 'helper.rb', 'README.md']
 
 dirname = "#{Dir.pwd}/day#{day}"
 puts dirname
