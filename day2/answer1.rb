@@ -2,11 +2,6 @@ require_relative "helper"
 
 input = File.read("#{__dir__}/input").split("\n")
 
-def parse_password_with_policy password_with_policy
-  num, letter, password = result = password_with_policy.split(' ')
-  [num.split('-').map(&:to_i), letter[0], password]
-end
-
 def is_valid bounds, letter, password
   puts "bounds: #{bounds}, letter: #{letter}, password: #{password}"
   lower_bound, upper_bound = bounds
