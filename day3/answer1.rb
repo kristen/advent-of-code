@@ -4,23 +4,24 @@ input = File.read("#{__dir__}/input").split("\n")
 
 right = 3
 
-trees = 0
-
-def is_tree location
-  location == '#'
-end
-
-(1..input.length - 1).each do |i|
-  row = input[i].dup
-  pos = (i * right) % row.length
-  location = row[pos]
-  if is_tree location
-    row[pos] = "X"
-    trees = trees + 1
-  else
-    row[pos] = "O"
+def count_trees map, slope
+  (1..map.length - 1).inject(0) do |trees, i|
+    row = map[i].dup
+    pos = (i * slope) % row.length
+    location = row[pos]
+    if is_tree location
+      row[pos] = "X"
+      puts row
+      trees + 1
+    else
+      row[pos] = "O"
+      puts row
+      trees
+    end
   end
-  puts row
 end
+
+
+trees = count_trees input, right
 
 puts trees
