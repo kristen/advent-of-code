@@ -21,7 +21,7 @@ else
       puts "making #{file_name} file"
       file = File.open file, "w"
       if (file_name.start_with?('answer'))
-        file.write("require_relative \"helper\"\n\ninput = File.read(\"\#{__dir__}/input\")")
+        file.write("require_relative \"helper\"\n\ninput = File.read(\"\#{__dir__}/input\").split(\"\\n\")")
       end
     end
   end
