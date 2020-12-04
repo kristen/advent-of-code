@@ -1,5 +1,3 @@
-require_relative "helper"
-
 class Passport
   @@required_fields = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid']
   @@optional_fields = ['cid']
