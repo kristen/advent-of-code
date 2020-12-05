@@ -21,6 +21,10 @@ Your puzzle input is 382345-843167.
 
 Your puzzle answer was 460.
 
+Your puzzle input is 130254-678275.
+
+Your puzzle answer was 2090.
+
 The first half of this puzzle is complete! It provides one gold star: *
 
 --- Part Two ---
@@ -38,6 +42,10 @@ How many different passwords within the range given in your puzzle input meet al
 Your puzzle input is still 382345-843167.
 
 Your puzzle answer was 290.
+
+Your puzzle input is 130254-678275.
+
+Your puzzle answer was 1419.
 
 Both parts of this puzzle are complete! They provide two gold stars: **
 

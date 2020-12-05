@@ -1,40 +1,26 @@
-R1 = 382345
-R2 = 843167
+R1 = 130254
+R2 = 678275
 
 def adjacent_digits_same? password
-  prev = password[0]
-  count = 1
-  counts = []
-  for i in 1..password.length-1
-    if password[i] == prev
-      count += 1
-    else
-      counts << count
-      count = 1
-      prev = password[i]
-    end
+  for i in 0..password.length-1
+    return true if password[i] == password[i+1]
   end
-  # puts "prev: #{prev}; last: #{password[password.length-1]}"
-  # count += 1 if password[password.length - 1] == prev
-  counts << count
-  counts.any? { |c| c == 2 }
+  false
 end
-
-puts true == adjacent_digits_same?("112233")
-puts false == adjacent_digits_same?("123444")
-puts true == adjacent_digits_same?("111122")
-puts true == adjacent_digits_same?("123455")
-puts false == adjacent_digits_same?("111123")
 
 def increasing? password
   for i in 0..password.length-2
     d1 = password[i].to_i
     d2 = password[i+1].to_i
+    # puts "d1: #{d1}; d2: #{d2}"
     return false if d1 > d2
   end
   true
 end
 
+puts increasing? 840000.to_s
+puts increasing? 111111.to_s
+puts increasing? 223456.to_s
 
 def is_valid? password
   # six digits
