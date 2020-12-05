@@ -15,6 +15,11 @@ POSITION_MODE = 0  # index of where value is
 IMMEDIATE_MODE = 1 # value
 RELATIVE_MODE = 2 # relative index (relative basis + the value)
 
+UP = "^"
+DOWN = "v"
+LEFT = "<"
+RIGHT = ">"
+
 def opcode_name opcode
   case opcode
   when ADD
