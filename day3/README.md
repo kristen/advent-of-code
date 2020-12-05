@@ -39,7 +39,8 @@ R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51
 U98,R91,D20,R16,D67,R40,U7,R15,U6,R7 = distance 135
 What is the Manhattan distance from the central port to the closest intersection?
 
- puzzle answer was 4981.
+Your puzzle answer was 4981.
+Your puzzle answer was 1195.
 
 The first half of this puzzle is complete! It provides one gold star: *
 
@@ -73,6 +74,7 @@ U98,R91,D20,R16,D67,R40,U7,R15,U6,R7 = 410 steps
 What is the fewest combined steps the wires must take to reach an intersection?
 
 Your puzzle answer was 164012.
+Your puzzle answer was 91518.
 
 Both parts of this puzzle are complete! They provide two gold stars: **
 
