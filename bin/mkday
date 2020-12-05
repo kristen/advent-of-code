@@ -2,10 +2,11 @@
 
 require 'fileutils'
 
-day = ARGV[0]
-files = ['answer1.rb', 'answer2.rb', 'input', 'helper.rb', 'README.md']
+year = ARGV[0]
+day = ARGV[1]
+files = ['part1.rb', 'part2.rb', 'input', 'helper.rb', 'README.md']
 
-dirname = "#{Dir.pwd}/day#{day}"
+dirname = "#{Dir.pwd}/#{year}/day#{day}"
 puts dirname
 if File.directory?(dirname)
   puts "there is already a folder for day#{day}"
@@ -14,13 +15,13 @@ else
   FileUtils.mkdir_p(dirname)
 
   files.each do |file_name|
-    file = "#{Dir.pwd}/day#{day}/#{file_name}"
+    file = "#{Dir.pwd}/#{year}/day#{day}/#{file_name}"
     if File.exist?(file)
       puts "#{file_name} file exists"
     else
       puts "making #{file_name} file"
       file = File.open file, "w"
-      if (file_name.start_with?('answer'))
+      if (file_name.start_with?('part'))
         file.write("require_relative \"helper\"\n\ninput = File.read(\"\#{__dir__}/input\").split(\"\\n\")")
       end
     end
