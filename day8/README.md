@@ -24,6 +24,8 @@ To make sure the image wasn't corrupted during transmission, the Elves would lik
 
 Your puzzle answer was 2440.
 
+Your puzzle answer was 1320.
+
 The first half of this puzzle is complete! It provides one gold star: *
 
 --- Part Two ---
@@ -60,7 +62,8 @@ So, the final image looks like this:
 
 What message is produced after decoding your image?
 
-
 Your puzzle answer was AZCJC.
+
+Your puzzle answer was RCYKR.
 
 Both parts of this puzzle are complete! They provide two gold stars: **

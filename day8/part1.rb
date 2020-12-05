@@ -24,5 +24,5 @@ def test data, dimx, dimy, expected
 end
 
 
-test "123456789012", 3, 2, 1
-puts mult_one_by_two File.read('input'), DIM_X, DIM_Y
+# test "123456789012", 3, 2, 1
+puts mult_one_by_two File.read("#{__dir__}/input"), DIM_X, DIM_Y

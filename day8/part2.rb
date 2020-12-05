@@ -39,5 +39,5 @@ end
 
 DIM_X = 25
 DIM_Y = 6
-result = image File.read('input'), DIM_X, DIM_Y
+result = image File.read("#{__dir__}/input"), DIM_X, DIM_Y
 print_result result
