@@ -1,4 +1,4 @@
-LOGGING = false
+LOGGING = true
 
 class Asteroid
   attr_accessor :x, :y
@@ -100,7 +100,7 @@ def get_best_location map
   asteroids = []
   for i in 0..map.length-1
     for j in 0..map[0].length-1
-      if astroid? map[i][j]
+      if astroid? map[i][j] 
         asteroids << Asteroid.new(j, i)
       end
     end
@@ -114,7 +114,7 @@ def get_best_location map
     end
   end
 
-  asteroids.map { |a| a.number_of_visible_asteroids }.max
+  asteroids.max { |a1, a2| a1.number_of_visible_asteroids <=> a2.number_of_visible_asteroids }
 end
 
 def parse_input input
@@ -129,65 +129,6 @@ def test input, expected
 end
 
 input = File.read("#{__dir__}/input")
-puts get_best_location(parse_input(input))
-
-# test ".#..#
-# .....
-# #####
-# ....#
-# ...##", 8
-
-# test "......#.#.
-# #..#.#....
-# ..#######.
-# .#.#.###..
-# .#..#.....
-# ..#....#.#
-# #..#....#.
-# .##.#..###
-# ##...#..#.
-# .#....####", 33
-
-# test "#.#...#.#.
-# .###....#.
-# .#....#...
-# ##.#.#.#.#
-# ....#.#.#.
-# .##..###.#
-# ..#...##..
-# ..##....##
-# ......#...
-# .####.###.", 35
-
-# test ".#..#..###
-# ####.###.#
-# ....###.#.
-# ..###.##.#
-# ##.##.#.#.
-# ....###..#
-# ..#.#..#.#
-# #..#.#.###
-# .##...##.#
-# .....#.#..", 41
-
-# test ".#..##.###...#######
-# ##.############..##.
-# .#.######.########.#
-# .###.#######.####.#.
-# #####.##.#.##.###.##
-# ..#####..#.#########
-# ####################
-# #.####....###.#.#.##
-# ##.#################
-# #####.##.###..####..
-# ..######..##.#######
-# ####.##.####...##..#
-# .#####..#.######.###
-# ##...#.##########...
-# #.##########.#######
-# .####.#.###.###.#.##
-# ....##.##.###..#####
-# .#.#.###########.###
-# #.#.#.#####.####.###
-# ###.##.####.##.#..##", 210
-
+result = get_best_location(parse_input(input))
+puts "#{result}: #{result.number_of_visible_asteroids}"
+puts result.x * 100 + result.y
