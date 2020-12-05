@@ -229,5 +229,6 @@ def test codes, expected
   puts "match: #{result == expected[0]}; expected: #{expected[0]}; expected phase_setting: #{expected[1]}; max_thruster_signal(#{codes}) = #{result}, phase_settings: #{phase_settings}"
 end
 
-input = File.read('input').split(",").map(&:to_i)
-puts max_thruster_signal input
+input = File.read("#{__dir__}/input").split(",").map(&:to_i)
+result, phase_settings = max_thruster_signal input
+puts result

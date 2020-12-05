@@ -46,6 +46,8 @@ Try every combination of phase settings on the amplifiers. What is the highest s
 
 Your puzzle answer was 34686.
 
+Your puzzle answer was 21760.
+
 The first half of this puzzle is complete! It provides one gold star: *
 
 --- Part Two ---
@@ -87,5 +89,7 @@ Here are some example programs:
 Try every combination of the new phase settings on the amplifier feedback loop. What is the highest signal that can be sent to the thrusters?
 
 Your puzzle answer was 36384144.
+
+Your puzzle answer was 69816958.
 
 Both parts of this puzzle are complete! They provide two gold stars: **
