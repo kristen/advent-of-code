@@ -56,6 +56,8 @@ What is the total number of direct and indirect orbits in your map data?
 
 Your puzzle answer was 171213.
 
+Your puzzle answer was 144909.
+
 The first half of this puzzle is complete! It provides one gold star: *
 
 --- Part Two ---
@@ -110,6 +112,8 @@ COM - B - C - D - E - F
 What is the minimum number of orbital transfers required to move from the object YOU are orbiting to the object SAN is orbiting? (Between the objects they are orbiting - not between YOU and SAN.)
 
 Your puzzle answer was 292.
+
+Your puzzle answer was 259.
 
 Both parts of this puzzle are complete! They provide two gold stars: **
 

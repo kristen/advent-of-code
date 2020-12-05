@@ -73,10 +73,13 @@ def test orbit_map, expected
   puts "match: #{result == expected}; expected: #{expected}; get_orbits(#{orbit_map}) = #{result}"
 end
 
-test [["COM", "B"], ["B", "C"], ["C", "D"], ["D", "E"], ["E", "F"], ["B", "G"], ["G", "H"], ["D", "I"], ["E", "J"], ["J", "K"], ["K", "L"], ["K", "YOU"], ["I", "SAN"]], 4
-test [["B", "C"], ["C", "D"], ["E", "F"], ["COM", "B"], ["B", "G"], ["G", "H"], ["D", "E"], ["D", "I"], ["E", "J"], ["J", "K"], ["K", "L"], ["K", "YOU"], ["I", "SAN"]], 4
+# test [["COM", "B"], ["B", "C"], ["C", "D"], ["D", "E"], ["E", "F"], ["B", "G"], ["G", "H"], ["D", "I"], ["E", "J"], ["J", "K"], ["K", "L"], ["K", "YOU"], ["I", "SAN"]], 4
+# test [["B", "C"], ["C", "D"], ["E", "F"], ["COM", "B"], ["B", "G"], ["G", "H"], ["D", "E"], ["D", "I"], ["E", "J"], ["J", "K"], ["K", "L"], ["K", "YOU"], ["I", "SAN"]], 4
 
 
-input = File.read('day6-input').split("\n").map { |o| o.split(")") }
+input = File.read("#{__dir__}/input").split("\n").map { |o| o.split(")") }
 # puts input[0..5].inspect
-test input, 292
+# test input, 292
+
+result = get_transfers input
+puts result

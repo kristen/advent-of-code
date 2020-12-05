@@ -57,6 +57,6 @@ end
 # test [["B", "C"], ["C", "D"], ["E", "F"], ["COM", "B"], ["B", "G"], ["G", "H"], ["D", "E"], ["D", "I"], ["E", "J"], ["J", "K"], ["K", "L"]], 42
 
 
-input = File.read('day6-input').split("\n").map { |o| o.split(")") }
+input = File.read("#{__dir__}/input").split("\n").map { |o| o.split(")") }
 # puts input[0..5].inspect
 test input, 171213
