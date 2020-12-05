@@ -156,7 +156,7 @@ end
 # test [1002,4,3,4,33], [1002,4,3,4,99]
 
 
-input = File.read('day5-input').split(",").map(&:to_i)
+input = File.read("#{__dir__}/input").split(",").map(&:to_i)
 int_code input
 # result = int_code input
 # puts result.inspect

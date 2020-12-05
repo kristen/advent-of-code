@@ -50,6 +50,8 @@ After providing 1 to the only input instruction and passing all the tests, what 
 
 Your puzzle answer was 13787043.
 
+Your puzzle answer was 5346030.
+
 The first half of this puzzle is complete! It provides one gold star: *
 
 --- Part Two ---
@@ -94,6 +96,8 @@ This time, when the TEST diagnostic program runs its input instruction to get th
 What is the diagnostic code for system ID 5?
 
 Your puzzle answer was 3892695.
+
+Your puzzle answer was 513116.
 
 Both parts of this puzzle are complete! They provide two gold stars: **
 
