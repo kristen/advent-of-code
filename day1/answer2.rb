@@ -18,5 +18,5 @@ end
 puts get_fuel_required_recursive 14
 puts get_fuel_required_recursive 1969
 
-input = File.read('day1-input').split("\n").map(&:to_i)
+input = File.read("#{__dir__}/input").split("\n").map(&:to_i)
 puts input.map { |mass| get_fuel_required_recursive mass }.sum
