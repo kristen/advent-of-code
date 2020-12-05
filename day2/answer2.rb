@@ -26,7 +26,7 @@ end
 EXPECTED = 19690720
 
 def test noun, verb
-  input = File.read('day2-input').split(",").map(&:to_i)
+  input = File.read("#{__dir__}/input").split(",").map(&:to_i)
   input[1] = noun
   input[2] = verb
   result = int_code input
