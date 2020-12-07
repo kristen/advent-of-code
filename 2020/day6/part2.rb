@@ -2,16 +2,14 @@ input = File.read("#{__dir__}/input")
   .split("\n\n")
   .map{|r| r.split("\n")}
 
-# puts input.inspect
-
 def count_questions group
-  memo = Hash.new
+  memo = Hash.new(0)
   group.each do |person|
     person.each_char do |question|
-      memo[question] = true
+      memo[question] += 1
     end
   end
-  memo.count {|k, v| v }
+  memo.count {|k, v| v == group.length }
 end
 
 # puts count_questions ['abc']
