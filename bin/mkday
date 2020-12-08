@@ -4,7 +4,7 @@ require 'fileutils'
 
 year = ARGV[0]
 day = ARGV[1]
-files = ['part1.rb', 'part2.rb', 'input', 'helper.rb', 'README.md']
+files = ['part1.rb', 'part2.rb', 'input', 'test-input', 'helper.rb', 'README.md']
 
 dirname = "#{Dir.pwd}/#{year}/day#{day}"
 puts dirname
@@ -22,7 +22,7 @@ else
       puts "making #{file_name} file"
       file = File.open file, "w"
       if (file_name.start_with?('part'))
-        file.write("require_relative \"helper\"\n\ninput = File.read(\"\#{__dir__}/input\").split(\"\\n\")")
+        file.write("require_relative \"helper\"\n\nTEST = true\n\ninput = File.read(\"\#{__dir__}/\#{TEST ? 'test-' : ''}input\").split(\"\\n\")")
       end
     end
   end
