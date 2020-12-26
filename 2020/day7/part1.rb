@@ -1,9 +1,9 @@
 require_relative "helper"
 
-# LOGGING = true
-LOGGING = false
-# TEST = true
-TEST = false
+LOGGING = true
+# LOGGING = false
+TEST = true
+# TEST = false
 
 input = File.read("#{__dir__}/#{TEST ? 'test-' : ''}input").split("\n")
 
