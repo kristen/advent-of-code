@@ -3,7 +3,6 @@ import fs from 'fs';
 const parseInput = (fileName) => {
     const inputString = fs.readFileSync(fileName).toString();
     const lines = inputString.split('\n');
-    console.log(lines)
     return lines
 }
 
