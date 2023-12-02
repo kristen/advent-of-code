@@ -1,29 +1,41 @@
 import fs from 'fs';
 
-const parseInput = (fileName) => {
-    const inputString = fs.readFileSync(fileName).toString();
-    const lines = inputString.split('\n');
-    return lines
+const parseInput = (fileName: string): string[] => {
+    const path = `${__dirname.replace("build", "src")}/day2/${fileName}`;
+    const inputString = fs.readFileSync(path).toString();
+    return inputString.split('\n');
 }
 
-// only 12 red cubes, 13 green cubes, and 14 blue cubes
+type Cubes = {
+    red: number;
+    green: number;
+    blue: number;
+}
 
-const cubes = {
+type Color = keyof Cubes;
+
+type Game = {
+    id: number;
+    rounds: Cubes[];
+}
+
+const cubes: Cubes = {
     red: 12,
     green: 13,
     blue: 14
 };
 
 // slit :, ;, ,
-const parseGame = (gameStr) => {
+const parseGame = (gameStr: string): Game => {
     const [game, record] = gameStr.split(':');
-    const id = game.match(/Game (\d+)/)[1];
+    const [_, id] = game.match(/Game (\d+)/) ?? [];
     const rounds = record.split(';').map((round) => {
         return round.split(',').reduce((acc, cube) => {
             console.log('cube', { cube });
-            const [match, count, color] = cube.match(/(\d+) (red|green|blue)/);
-            // console.log({ match, count, color });
-            acc[color] = parseInt(count, 10);
+            const [_, count, color] = cube.match(/(\d+) (red|green|blue)/) ?? [];
+            if (color) {
+                acc[color as Color] = parseInt(count, 10);
+            }
             return acc;
         }, {
             red: 0,
@@ -38,17 +50,17 @@ const parseGame = (gameStr) => {
     }
 }
 
-const isValidRound = ({ red, green, blue }) => {
+const isValidRound = ({ red, green, blue }: Cubes) => {
     return red <= cubes.red && green <= cubes.green && blue <= cubes.blue;
 }
 
-const isValidGame = ({ rounds }) => {
+const isValidGame = ({ rounds }: Game) => {
     return rounds.reduce((acc, round) => {
         return acc && isValidRound(round);
     }, true)
 }
 
-const sumGames = (fileName) => {
+const sumGames = (fileName: string) => {
     const input = parseInput(fileName);
     const result = input.reduce((acc, gameStr) => {
         console.log(gameStr);

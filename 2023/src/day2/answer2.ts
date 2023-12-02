@@ -1,17 +1,33 @@
 import fs from 'fs';
 
-const parseInput = (fileName) => {
-    const inputString = fs.readFileSync(fileName).toString();
+const parseInput = (fileName: string): string[] => {
+    const path = `${__dirname.replace("build", "src")}/day2/${fileName}`;
+    const inputString = fs.readFileSync(path).toString();
     return inputString.split('\n');
 }
 
-const parseGame = (gameStr) => {
+type Cubes = {
+    red: number;
+    green: number;
+    blue: number;
+}
+
+type Color = keyof Cubes;
+
+type Game = {
+    id: number;
+    rounds: Cubes[];
+}
+
+const parseGame = (gameStr: string): Game => {
     const [game, record] = gameStr.split(':');
-    const id = game.match(/Game (\d+)/)[1];
+    const [_, id] = game.match(/Game (\d+)/) ?? [];
     const rounds = record.split(';').map((round) => {
         return round.split(',').reduce((acc, cube) => {
-            const [_, count, color] = cube.match(/(\d+) (red|green|blue)/);
-            acc[color] = parseInt(count, 10);
+            const [_, count, color] = cube.match(/(\d+) (red|green|blue)/) ?? [];
+            if (color) {
+                acc[color as Color] = parseInt(count, 10);
+            }
             return acc;
         }, {
             red: 0,
@@ -26,7 +42,7 @@ const parseGame = (gameStr) => {
     }
 }
 
-const getMinimumCubesForRound = (existingCubes, {red, green, blue}) => {
+const getMinimumCubesForRound = (existingCubes: Cubes, { red, green, blue }: Cubes): Cubes => {
     return {
         red: Math.max(existingCubes.red, red),
         green: Math.max(existingCubes.green, green),
@@ -34,7 +50,7 @@ const getMinimumCubesForRound = (existingCubes, {red, green, blue}) => {
     }
 }
 
-const getMinimumCubes = ({ rounds }) => {
+const getMinimumCubes = ({ rounds }: Game): Cubes => {
     return rounds.reduce((acc, round) => {
         return getMinimumCubesForRound(acc, round);
     }, {
@@ -44,11 +60,11 @@ const getMinimumCubes = ({ rounds }) => {
     })
 }
 
-const getCubePower = ({red, green, blue}) => {
+const getCubePower = ({ red, green, blue }: Cubes): number => {
     return red * green * blue;
 }
 
-const sumGames = (fileName) => {
+const sumGames = (fileName: string) => {
     const input = parseInput(fileName);
     const result = input.reduce((acc, gameStr) => {
         const game = parseGame(gameStr);
@@ -56,7 +72,7 @@ const sumGames = (fileName) => {
         const cubePower = getCubePower(minimumCubes);
         return acc + cubePower;
     }, 0);
-    console.log({result})
+    console.log({ result })
 }
 
 sumGames('input');
