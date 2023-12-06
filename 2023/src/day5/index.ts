@@ -6,6 +6,20 @@ const parseInput = (fileName: string): string[] => {
     return inputString.split('\n');
 }
 
+export const parseInts = (str: string): number[] => {
+    return str.match(/(\d+)/g)?.map((d) => parseInt(d, 10)) ?? [];
+}
+
+export const pairs = <T>(array: T[]): T[][] => {
+    return array.reduce<T[][]>((result, _value, index, a) => {
+        if (index % 2 === 0) {
+            const pair = a.slice(index, index + 2);
+            result.push(pair);
+        }
+        return result;
+    }, []);
+}
+
 type Range = {
     destinationStart: number;
     sourceStart: number;
@@ -103,22 +117,16 @@ const parseFile = (lines: string[]) => {
 }
 
 const parseSeeds = (str: string): number[] => {
-    return str.match(/(\d+)/g)?.map((d) => parseInt(d, 10))
-        .filter<number>((n: number): n is number => typeof n === "number") as number[];
+    return parseInts(str);
 }
 
 const parseSeedRange = (str: string): SeedRange[] => {
-    const nums = str.match(/(\d+)/g)?.map((d) => parseInt(d, 10)) ?? [];
-    const pairs = nums.reduce<number[][]>((result, value, index, array) => {
-        if (index % 2 === 0)
-            result.push(array.slice(index, index + 2));
-        return result;
-    }, []);
-    return pairs.map(([start, length]) => ({ start, length }))
+    const nums = parseInts(str);
+    return pairs(nums).map(([start, length]) => ({ start, length }))
 }
 
 const isSeedInRange = (seed: number, seedRanges: SeedRange[]): boolean => {
-    return seedRanges.reduce<boolean>((acc, {start, length}) => {
+    return seedRanges.reduce<boolean>((acc, { start, length }) => {
         if (seed >= start && seed < start + length) {
             return true;
         }
@@ -127,53 +135,42 @@ const isSeedInRange = (seed: number, seedRanges: SeedRange[]): boolean => {
 }
 
 const parseRange = (line: string): Range => {
-    const match = line.match(/(\d+)/g)?.map((d) => parseInt(d, 10))
-        .filter<number>((n: number): n is number => typeof n === "number") as number[];
+    const nums = parseInts(line);
     return {
-        destinationStart: match[0],
-        sourceStart: match[1],
-        rangeLength: match[2],
+        destinationStart: nums[0],
+        sourceStart: nums[1],
+        rangeLength: nums[2],
     }
 }
 
 const sourceToDestination = (source: number, ranges: Range[]): number => {
-    const match = ranges.find(({ destinationStart, sourceStart, rangeLength }) => {
-        // console.log("sourceToDestination", { source, sourceStart, rangeLength })
+    const match = ranges.find(({ sourceStart, rangeLength }) => {
         if (source >= sourceStart && source < sourceStart + rangeLength) {
-            // console.log("source in range")
             return true;
         } else {
-            // console.log("source NOT in range")
             return false;
         }
     })
     if (match) {
         const diff = source - match.sourceStart;
-        // console.log("match", match, { source, diff, destination: match.destinationStart + diff });
         return match.destinationStart + diff;
     } else {
-        // console.log("NO MATCH")
         return source;
     }
 }
 
 const destinationToSource = (destination: number, ranges: Range[]): number => {
-    const match = ranges.find(({ destinationStart, sourceStart, rangeLength }) => {
-        // console.log("destinationToSource", { destination, sourceStart, rangeLength })
+    const match = ranges.find(({ destinationStart, rangeLength }) => {
         if (destination >= destinationStart && destination < destinationStart + rangeLength) {
-            // console.log("destination in range")
             return true;
         } else {
-            // console.log("destination NOT in range")
             return false;
         }
     })
     if (match) {
         const diff = destination - match.destinationStart;
-        // console.log("match", match, { destination, diff, source: match.sourceStart + diff });
         return match.sourceStart + diff;
     } else {
-        // console.log("NO MATCH")
         return destination;
     }
 }
@@ -253,14 +250,14 @@ const part2 = (fileName: string) => {
     console.log(farming);
 
     let done = false;
-    let location = 1000000;
+    let location = 50000000;
 
     while (!done) {
         const seed = locationToSeed(location, farming).seed;
         if (isSeedInRange(seed, farming.seedRange)) {
             done = true;
         } else {
-            console.log({seed, location})
+            console.log({ seed, location })
             location += 1;
         }
     }
