@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export const parseInput = (fileName: string, day: string): string[] => {
+const parseInput = (fileName: string, day: string): string[] => {
     const path = `${__dirname.replace("build", "src")}/${day}/${fileName}`;
     const inputString = fs.readFileSync(path).toString();
     return inputString.split('\n');
@@ -10,11 +10,11 @@ const isNumber = (s: string): boolean => {
     return !isNaN(parseInt(s, 10));
 }
 
-export const parseInts = (str: string): number[] => {
+const parseInts = (str: string): number[] => {
     return str.match(/(\d+)/g)?.map((d) => parseInt(d, 10)) ?? [];
 }
 
-export const pairs = <T>(array: T[]): T[][] => {
+const pairs = <T>(array: T[]): T[][] => {
     return array.reduce<T[][]>((result, _value, index, a) => {
         if (index % 2 === 0) {
             const pair = a.slice(index, index + 2);
@@ -28,6 +28,12 @@ const sum = (values: number[]) => {
     return values.reduce((acc, value) => {
         return acc + value;
     }, 0);
+}
+
+const mult = (values: number[]) => {
+    return values.reduce((acc, value) => {
+        return acc * value;
+    }, 1);
 }
 
 const isValidPosition = (n: number, m: number) => (i: number, j: number): boolean => {
