@@ -1,7 +1,11 @@
 import fs from 'fs';
 
-const parseInput = (fileName: string, day: string): string[] => {
-    const path = `${__dirname.replace("build", "src")}/${day}/${fileName}`;
+const DAY = "CHANGEME"
+
+/// BEGIN UTILS ///
+
+const parseInput = (fileName: string): string[] => {
+    const path = `${__dirname.replace("build", "src")}/${DAY}/${fileName}`;
     const inputString = fs.readFileSync(path).toString();
     return inputString.split('\n');
 }
@@ -68,9 +72,17 @@ const getAdjacent = (lines: string[], i: number, j: number): { char: string; k: 
     })
 }
 
+/// END UTILS ///
+
 const part1 = (fileName: string) => {
-    const input = parseInput(fileName, 'CHANGEME');
+    const input = parseInput(fileName);
     console.log("part1")
 }
 
+const part2 = (fileName: string) => {
+    const input = parseInput(fileName);
+    console.log("part2")
+}
+
 part1('example')
+// part2('example')
