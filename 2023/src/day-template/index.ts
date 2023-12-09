@@ -40,6 +40,19 @@ const mult = (values: number[]) => {
     }, 1);
 }
 
+const sumMult = (values: number[]) => {
+    return values.reduce((acc, value, index) => {
+        return acc + value * index + 1;
+    }, 0)
+}
+
+const gcd = (x: number, y: number): number => (!x ? y : gcd(y % x, x));
+
+const lcm = (arr: number[]) => {
+    const _lcm = (x: number, y: number): number => (x * y) / gcd(x, y);
+    return [...arr].reduce((a, b) => _lcm(a, b));
+};
+
 const isValidPosition = (n: number, m: number) => (i: number, j: number): boolean => {
     if (i < 0 || j < 0 || i > n - 1 || j > m - 1)
         return false;
