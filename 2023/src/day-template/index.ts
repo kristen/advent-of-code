@@ -1,6 +1,7 @@
 import fs from 'fs';
 
-const DAY = "CHANGEME"
+const DAY = "CHANGEME";
+const LOGGING = false;
 
 /// BEGIN UTILS ///
 
@@ -15,7 +16,7 @@ const isNumber = (s: string): boolean => {
 }
 
 const parseInts = (str: string): number[] => {
-    return str.match(/(\d+)/g)?.map((d) => parseInt(d, 10)) ?? [];
+    return str.match(/-?\d+/g)?.map((d) => parseInt(d, 10)) ?? [];
 }
 
 const pairs = <T>(array: T[]): T[][] => {
